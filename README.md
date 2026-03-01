@@ -1,4 +1,4 @@
-# 🚀 Cloud Media Gallery (Expo + Node.js)
+# 🚀 Beeyond Tech Media (Expo + Node.js)
 
 ## Project Overview
 Design and build a Cloud Media Gallery Application where users can register, authenticate securely, upload images and videos, and view their media in a performant gallery layout.
