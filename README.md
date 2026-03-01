@@ -119,15 +119,3 @@ AWS_S3_BUCKET=your_bucket_name
 - **Infinite Scroll**: Cursor/Page-based pagination to avoid loading large datasets at once.
 - **Skeleton Loaders**: Improved perceived performance during data fetching.
 
----
-
-## Known Limitations
-- Background upload sync is not implemented (per requirements).
-- Local storage for *videos* is limited to the device's native caching mechanism.
-
----
-
-## Future Improvements
-- Implement a local upload queue for offline support.
-- Add advanced video compression before upload.
-- Enhance security with biometric authentication.
