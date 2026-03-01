@@ -56,13 +56,17 @@ function RootNavigator() {
   );
 }
 
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 export default function RootLayout() {
   return (
-    <Provider store={store}>
-      <ThemeProvider>
-        <RootNavigator />
-      </ThemeProvider>
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <RootNavigator />
+        </ThemeProvider>
+      </Provider>
+    </SafeAreaProvider>
   );
 }
 
