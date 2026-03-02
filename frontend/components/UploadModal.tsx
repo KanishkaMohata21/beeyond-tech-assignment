@@ -24,6 +24,7 @@ interface UploadModalProps {
 
 export default function UploadModal({ visible, onClose }: UploadModalProps) {
     const dispatch = useAppDispatch();
+    const recordingRef = React.useRef<Audio.Recording | null>(null);
     const { isUploading, uploadProgress } = useAppSelector((s) => s.media);
     const isOnline = useAppSelector((s) => s.network.isOnline);
     const [error, setError] = useState<string | null>(null);
@@ -37,11 +38,12 @@ export default function UploadModal({ visible, onClose }: UploadModalProps) {
 
     React.useEffect(() => {
         return () => {
-            if (recording) {
-                recording.stopAndUnloadAsync().catch(console.error);
+            if (recordingRef.current) {
+                recordingRef.current.stopAndUnloadAsync().catch(() => { });
+                recordingRef.current = null;
             }
         };
-    }, [recording]);
+    }, []);
 
     const pickMedia = async (mediaType: 'image' | 'video') => {
         try {
@@ -121,6 +123,7 @@ export default function UploadModal({ visible, onClose }: UploadModalProps) {
                 Audio.RecordingOptionsPresets.HIGH_QUALITY
             );
             setRecording(recording);
+            recordingRef.current = recording;
             setIsRecording(true);
             setRecordingDuration(0);
 
@@ -145,6 +148,7 @@ export default function UploadModal({ visible, onClose }: UploadModalProps) {
             await recording.stopAndUnloadAsync();
             const uri = recording.getURI();
             setRecording(null);
+            recordingRef.current = null;
             setRecordingDuration(0);
 
             if (uri) {
@@ -162,6 +166,7 @@ export default function UploadModal({ visible, onClose }: UploadModalProps) {
             console.error('Stop recording error:', err);
             setError('Failed to stop recording.');
             setRecording(null);
+            recordingRef.current = null;
             setIsRecording(false);
             setRecordingDuration(0);
         }
