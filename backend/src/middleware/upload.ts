@@ -11,6 +11,12 @@ const ALLOWED_MIME_TYPES = [
     'video/quicktime',
     'video/x-msvideo',
     'video/webm',
+    'audio/mpeg',
+    'audio/wav',
+    'audio/mp4',
+    'audio/aac',
+    'audio/x-m4a',
+    'audio/ogg',
 ];
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
@@ -41,7 +47,7 @@ const fileFilter = (
     if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Invalid file type. Only image and video files are allowed.'));
+        cb(new Error('Invalid file type. Only image, video, and audio files are allowed.'));
     }
 };
 

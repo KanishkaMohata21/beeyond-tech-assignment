@@ -19,7 +19,9 @@ export const uploadMedia = async (
 
         const uploadedMedia = await Promise.all(
             files.map(async (file) => {
-                const mediaType = file.mimetype.startsWith('image/') ? 'image' : 'video';
+                let mediaType: 'image' | 'video' | 'audio' = 'image';
+                if (file.mimetype.startsWith('video/')) mediaType = 'video';
+                else if (file.mimetype.startsWith('audio/')) mediaType = 'audio';
                 const fileUrl = await uploadToS3(file);
 
                 const media = await Media.create({

@@ -53,7 +53,7 @@ export const refreshMediaThunk = createAsyncThunk(
 export const uploadMediaThunk = createAsyncThunk(
     'media/uploadMedia',
     async (
-        assets: { uri: string; type: 'image' | 'video'; fileName: string }[],
+        assets: { uri: string; type: 'image' | 'video' | 'audio'; fileName: string }[],
         { rejectWithValue, dispatch }
     ) => {
         try {

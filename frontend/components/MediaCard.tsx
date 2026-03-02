@@ -6,6 +6,7 @@ import {
     Dimensions,
     Image,
     ActivityIndicator,
+    Text,
 } from 'react-native';
 import { Image as ExpoImage } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,7 +19,7 @@ const CARD_SIZE = (width - 48) / 3;
 
 interface MediaCardProps {
     fileUrl: string;
-    mediaType: 'image' | 'video';
+    mediaType: 'image' | 'video' | 'audio';
     isFavorite: boolean;
     onPress?: () => void;
     onFavoriteToggle?: () => void;
@@ -81,7 +82,7 @@ export default function MediaCard({
                             </View>
                         )}
                     </>
-                ) : (
+                ) : mediaType === 'video' ? (
                     /* Video thumbnail */
                     <View style={[styles.videoThumbnail, { backgroundColor: colors.surfaceLight }]}>
                         {thumbnail ? (
@@ -114,12 +115,25 @@ export default function MediaCard({
                             </View>
                         )}
                     </View>
+                ) : (
+                    /* Audio placeholder */
+                    <View style={[styles.videoThumbnail, { backgroundColor: colors.surfaceLight }]}>
+                        <View style={[styles.placeholderThumbnail, { backgroundColor: colors.surfaceLight }]}>
+                            <Ionicons name="musical-notes" size={48} color={colors.primary} />
+                            <Text style={{ marginTop: 8, color: colors.textSecondary, fontSize: 12, fontWeight: '600' }}>AUDIO</Text>
+                        </View>
+                        <View style={styles.playOverlay}>
+                            <View style={[styles.playCircle, { backgroundColor: 'rgba(33, 150, 243, 0.85)' }]}>
+                                <Ionicons name="play" size={20} color="#FFFFFF" style={{ marginLeft: 2 }} />
+                            </View>
+                        </View>
+                    </View>
                 )}
 
-                {/* Video badge */}
-                {mediaType === 'video' && (
-                    <View style={styles.videoBadge}>
-                        <Ionicons name="videocam" size={14} color="#FFFFFF" />
+                {/* Media type badge */}
+                {(mediaType === 'video' || mediaType === 'audio') && (
+                    <View style={[styles.videoBadge, mediaType === 'audio' && { backgroundColor: 'rgba(33, 150, 243, 0.6)' }]}>
+                        <Ionicons name={mediaType === 'video' ? "videocam" : "musical-notes"} size={14} color="#FFFFFF" />
                     </View>
                 )}
             </TouchableOpacity>

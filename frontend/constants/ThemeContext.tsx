@@ -19,7 +19,7 @@ const DARK_COLORS = {
     error: '#FF5252',
     warning: '#FF9800',
     border: '#2A2A45',
-    overlay: 'rgba(0,0,0,0.6)',
+    overlay: 'rgba(0,0,0,0.1)',
     white: '#FFFFFF',
     black: '#000000',
     favorite: '#FF4081',

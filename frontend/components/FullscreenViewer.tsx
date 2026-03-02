@@ -27,7 +27,7 @@ const DISMISS_THRESHOLD = 80;
 interface MediaItem {
     _id: string;
     file_url: string;
-    media_type: 'image' | 'video';
+    media_type: 'image' | 'video' | 'audio';
     is_favorite: boolean;
 }
 
@@ -224,22 +224,38 @@ export default function FullscreenViewer({
 
     const renderMediaItem = useCallback(({ item, index }: { item: MediaItem; index: number }) => (
         <View style={styles.slide}>
-            {item.media_type === 'video' ? (
+            {item.media_type === 'video' || item.media_type === 'audio' ? (
                 <View style={styles.videoContainer}>
-                    {(!isOnline && (!videoUris[item.file_url] || videoUris[item.file_url] === item.file_url)) ? (
+                    {item.media_type === 'video' && (!isOnline && (!videoUris[item.file_url] || videoUris[item.file_url] === item.file_url)) ? (
                         <View style={styles.offlinePlaceholder}>
                             <Ionicons name="cloud-offline-outline" size={48} color="rgba(255, 255, 255, 0.6)" />
                             <Text style={styles.offlineText}>Please connect to internet to watch this video</Text>
                         </View>
                     ) : (
-                        <Video
-                            source={{ uri: videoUris[item.file_url] || item.file_url }}
-                            style={styles.video}
-                            resizeMode={ResizeMode.CONTAIN}
-                            useNativeControls
-                            shouldPlay={activeIndex === index && visible}
-                            isLooping
-                        />
+                        item.media_type === 'audio' ? (
+                            <View style={[styles.audioPlayerContainer, { backgroundColor: colors.surfaceLight + '20' }]}>
+                                <View style={styles.audioIconCircle}>
+                                    <Ionicons name="musical-notes" size={60} color={colors.primary} />
+                                </View>
+                                <Text style={[styles.audioTitle, { color: '#FFFFFF' }]}>Audio Recording</Text>
+                                <Video
+                                    source={{ uri: item.file_url }}
+                                    style={styles.audioVideo}
+                                    useNativeControls
+                                    shouldPlay={activeIndex === index && visible}
+                                    resizeMode={ResizeMode.CONTAIN}
+                                />
+                            </View>
+                        ) : (
+                            <Video
+                                source={{ uri: videoUris[item.file_url] || item.file_url }}
+                                style={styles.video}
+                                resizeMode={ResizeMode.CONTAIN}
+                                useNativeControls
+                                shouldPlay={activeIndex === index && visible}
+                                isLooping
+                            />
+                        )
                     )}
                 </View>
             ) : (
@@ -446,5 +462,32 @@ const styles = StyleSheet.create({
         marginTop: 16,
         opacity: 0.8,
         lineHeight: 22,
+    },
+    audioPlayerContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 20,
+        width: SCREEN_WIDTH * 0.85,
+        padding: 40,
+        borderRadius: 30,
+    },
+    audioIconCircle: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 10,
+    },
+    audioTitle: {
+        fontSize: 22,
+        fontWeight: '700',
+        letterSpacing: 0.5,
+    },
+    audioVideo: {
+        width: '100%',
+        height: 50,
+        marginTop: 10,
     },
 });

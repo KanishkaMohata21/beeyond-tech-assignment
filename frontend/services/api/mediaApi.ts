@@ -5,7 +5,7 @@ import { API_URL } from '@/constants/api';
 export interface Media {
     _id: string;
     user_id: string;
-    media_type: 'image' | 'video';
+    media_type: 'image' | 'video' | 'audio';
     file_url: string;
     is_favorite: boolean;
     created_at: string;
@@ -39,11 +39,11 @@ export const mediaApi = {
     },
 
     uploadSingleFile: async (
-        asset: { uri: string; type: 'image' | 'video'; fileName: string },
+        asset: { uri: string; type: 'image' | 'video' | 'audio'; fileName: string },
         onProgress?: (progress: number) => void
     ): Promise<Media> => {
         const formData = new FormData();
-        const fileName = asset.fileName || `upload_${Date.now()}.${asset.type === 'image' ? 'jpg' : 'mp4'}`;
+        const fileName = asset.fileName || `upload_${Date.now()}.${asset.type === 'image' ? 'jpg' : asset.type === 'video' ? 'mp4' : 'm4a'}`;
         const extension = fileName.split('.').pop()?.toLowerCase() || '';
 
         let mimeType: string;
@@ -55,7 +55,16 @@ export const mediaApi = {
         else if (extension === 'mov') mimeType = 'video/quicktime';
         else if (extension === 'avi') mimeType = 'video/x-msvideo';
         else if (extension === 'webm') mimeType = 'video/webm';
-        else mimeType = asset.type === 'image' ? 'image/jpeg' : 'video/mp4';
+        else if (extension === 'mp3') mimeType = 'audio/mpeg';
+        else if (extension === 'wav') mimeType = 'audio/wav';
+        else if (extension === 'm4a') mimeType = 'audio/x-m4a';
+        else if (extension === 'aac') mimeType = 'audio/aac';
+        else if (extension === 'ogg') mimeType = 'audio/ogg';
+        else {
+            if (asset.type === 'image') mimeType = 'image/jpeg';
+            else if (asset.type === 'video') mimeType = 'video/mp4';
+            else mimeType = 'audio/x-m4a';
+        }
 
         formData.append('files', {
             uri: asset.uri,
@@ -86,13 +95,13 @@ export const mediaApi = {
     },
 
     uploadMedia: async (
-        assets: { uri: string; type: 'image' | 'video'; fileName: string }[],
+        assets: { uri: string; type: 'image' | 'video' | 'audio'; fileName: string }[],
         onProgress?: (progress: number) => void
     ): Promise<Media[]> => {
         const formData = new FormData();
 
         assets.forEach((asset) => {
-            const fileName = asset.fileName || `upload_${Date.now()}.${asset.type === 'image' ? 'jpg' : 'mp4'}`;
+            const fileName = asset.fileName || `upload_${Date.now()}.${asset.type === 'image' ? 'jpg' : asset.type === 'video' ? 'mp4' : 'm4a'}`;
             const extension = fileName.split('.').pop()?.toLowerCase() || '';
 
             let mimeType: string;
@@ -104,7 +113,16 @@ export const mediaApi = {
             else if (extension === 'mov') mimeType = 'video/quicktime';
             else if (extension === 'avi') mimeType = 'video/x-msvideo';
             else if (extension === 'webm') mimeType = 'video/webm';
-            else mimeType = asset.type === 'image' ? 'image/jpeg' : 'video/mp4';
+            else if (extension === 'mp3') mimeType = 'audio/mpeg';
+            else if (extension === 'wav') mimeType = 'audio/wav';
+            else if (extension === 'm4a') mimeType = 'audio/x-m4a';
+            else if (extension === 'aac') mimeType = 'audio/aac';
+            else if (extension === 'ogg') mimeType = 'audio/ogg';
+            else {
+                if (asset.type === 'image') mimeType = 'image/jpeg';
+                else if (asset.type === 'video') mimeType = 'video/mp4';
+                else mimeType = 'audio/x-m4a';
+            }
 
             formData.append('files', {
                 uri: asset.uri,

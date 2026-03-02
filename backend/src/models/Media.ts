@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IMedia extends Document {
     user_id: mongoose.Types.ObjectId;
-    media_type: 'image' | 'video';
+    media_type: 'image' | 'video' | 'audio';
     file_url: string;
     is_favorite: boolean;
     created_at: Date;
@@ -17,7 +17,7 @@ const mediaSchema = new Schema<IMedia>({
     },
     media_type: {
         type: String,
-        enum: ['image', 'video'],
+        enum: ['image', 'video', 'audio'],
         required: [true, 'Media type is required'],
     },
     file_url: {
